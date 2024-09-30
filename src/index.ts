@@ -2,18 +2,17 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 dotenv.config();
 
-import { limiter } from "./configs/rate-limiter";
+import { userLimiter } from "./configs/rate-limiter";
 import { redisClient } from "./configs/redis";
 import { mockData } from "./mocks/db";
-
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
 redisClient.connect();
 
-app.use(limiter);
+app.use(userLimiter);
 
-app.get("/", async (req: Request, res: Response) => {
+app.get("/data", async (req: Request, res: Response) => {
   const userId = req.headers["user_id"] as string;
   const cachedData = await redisClient.get(userId);
   if (cachedData) res.status(200).json(JSON.parse(cachedData));
