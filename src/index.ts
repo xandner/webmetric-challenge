@@ -1,11 +1,11 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import { limiter } from "./configs/rate-limiter";
+dotenv.config();
 
+import { limiter } from "./configs/rate-limiter";
 import { redisClient } from "./configs/redis";
 import { mockData } from "./mocks/db";
 
-dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 3000;

@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  cache:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3300:3300"
+    depends_on:
+      - cache
