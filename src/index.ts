@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from "express";
+import morgan from "morgan";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -10,6 +11,9 @@ const app: Express = express();
 const port = process.env.PORT || 3000;
 redisClient.connect();
 
+app.use(
+  morgan("[ :method ] :url :status - :response-time ms")
+);
 app.use(userLimiter);
 
 app.get("/data", async (req: Request, res: Response) => {
