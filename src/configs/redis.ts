@@ -11,4 +11,5 @@ redisClient.connect().then(()=>{
 }).catch((error) => {
   throw new Error("Error connecting to Redis, " + error);
 });
-  export default redisClient;
+
+export default redisClient;
