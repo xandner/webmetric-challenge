@@ -18,7 +18,7 @@ app.use(
 app.use(userLimiter);
 
 app.get("/data", async (req: Request, res: Response) => {
-  const userId = req.headers["user_id"] as string;
+  const userId = req.headers["user_id"] as string || "0";
   const cachedData = await redisClient.get(userId);
   if (cachedData) res.status(200).json(JSON.parse(cachedData));
   else {
