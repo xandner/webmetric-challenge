@@ -2,15 +2,30 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import { limiter } from "./configs/rate-limiter";
 
+import { redisClient } from "./configs/redis";
+import { mockData } from "./mocks/db";
+
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
+redisClient.connect();
 
 app.use(limiter);
 
-app.get("/", limiter, (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
+app.get("/", async (req: Request, res: Response) => {
+  const userId = req.headers["user_id"] as string;
+  const cachedData = await redisClient.get(userId);
+  if (cachedData) res.status(200).json(JSON.parse(cachedData));
+  else {
+    const user = mockData.find((user) => user.id === Number(userId));
+    if (user) {
+      await redisClient.set(userId, JSON.stringify(user));
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  }
 });
 
 app.listen(port, () => {
