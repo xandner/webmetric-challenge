@@ -4,12 +4,13 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { userLimiter } from "./configs/rate-limiter";
-import { redisClient } from "./configs/redis";
+import redisClient  from "./configs/redis";
 import { mockData } from "./mocks/db";
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
-redisClient.connect();
+
+
 
 app.use(
   morgan("[ :method ] :url :status - :response-time ms")
